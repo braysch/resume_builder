@@ -39,47 +39,50 @@ title = input("Enter your title (leave blank to use position): ")
 if title == "":
     title = position
 company = input("Enter the company name: ")
+adjective = "innovative"
+adjective = input("What adjective should we use for your resume summary?: ")
+adjective.capitalize()
 
-summary = "Innovative software engineer with professional experience in full-stack development for growing business. Highly knowledgeable in an array of languages, frameworks, and tools for web and mobile development to deliver helpful, effective, and visually pleasing applications."
+summary = "" + adjective + " " + title.lower() + " with professional experience in full-stack development for growing business. Highly knowledgeable in an array of languages, frameworks, and tools for web and mobile development to deliver helpful, effective, and visually pleasing applications."
 
 # List of expertise areas and corresponding time strings
 expertise = [
-    ("Programming", "1y"),
-    ("Mobile Development", "2y"),
+    ("Programming", "7y"),
+    ("Mobile Development", "3y"),
     ("Web Development", "3y"),
-    ("UI Design", "1y"),
-    ("Back-end Development", "2y"),
+    ("UI Design", "3y"),
+    ("Back-end Development", "3y"),
     ("API Integration", "1y"),
-    ("Embedded Systems", "1y"),
+    ("Embedded Systems", "4y"),
     ("Database Management", "2y"),
 ]
 
 # List of skills and corresponding time strings
 skills = [
-    ("Flutter", "1y"),
-    ("Dart", "1y"),
-    ("Java", "2y"),
-    ("Kotlin", "2y"),
-    ("Android Studio", "2y"),
-    ("Jetpack Compose", "1y"),
+    ("Android Studio", "3y"),
+    ("Flutter", "2y"),
+    ("Dart", "2y"),
+    ("Java", "4y"),
+    ("Kotlin", "3y"),
+    ("Jetpack Compose", "3y"),
     ("React", "1y"),
-    ("Vue", "1y"),
+    ("Vue", "2y"),
     ("JavaScript", "3y"),
-    ("TypeScript", "2y"),
+    ("TypeScript", "1y"),
     ("HTML", "3y"),
     ("CSS", "3y"),
     ("Tailwind", "1y"),
-    ("PHP", "2y"),
+    ("PHP", "1y"),
     ("Laravel", "1y"),
-    ("C", "1y"),
+    ("C", "2y"),
     ("C#", "2y"),
-    ("C++", "2y"),
-    ("SQL", "3y"),
-    ("Git", "3y"),
-    ("Google Firebase", "1y"),
-    ("Bootstrap", "2y"),
-    ("Python", "3y"),
-    ("Visual Studio", "4y"),
+    ("C++", "7y"),
+    ("SQL", "2y"),
+    ("Git", "4y"),
+    ("Google Firebase", "3y"),
+    ("Bootstrap", "1y"),
+    ("Python", "2y"),
+    ("Visual Studio", "5y"),
 ]
 
 softSkills = [
@@ -132,7 +135,6 @@ def prioritize_skills():
     # Combine the selected and unselected lists
     return selected_skills + [skill[0] for skill in unselected]
 
-
 # Function to gather soft skills from the user
 def gather_soft_skills():
     # Prompt user for soft skills
@@ -181,16 +183,22 @@ placeholders = {
 }
 
 # Add expertise placeholders and their times to the dictionary
-for i, exp in enumerate(expertise):
-    if exp[0] in prioritized_expertise:
-        placeholders[f'{{{{expertise{i}}}}}'] = exp[0]
-        placeholders[f'{{{{ey{i}}}}}'] = exp[1]  # Time placeholder for expertise
+for i, exp in enumerate(prioritized_expertise):
+    # Get the corresponding expertise tuple from the original expertise list
+    exp_tuple = next((e for e in expertise if e[0] == exp), None)
 
-# Add skill placeholders and their times to the dictionary
-for i, skill in enumerate(skills):
-    if skill[0] in prioritized_skills:
-        placeholders[f'{{{{skill{i}}}}}'] = skill[0]
-        placeholders[f'{{{{sy{i}}}}}'] = skill[1]  # Time placeholder for skills
+    if exp_tuple:  # Only proceed if the expertise tuple was found
+        placeholders[f'{{{{expertise{i}}}}}'] = exp_tuple[0]  # Expertise name
+        placeholders[f'{{{{ey{i}}}}}'] = exp_tuple[1]  # Time placeholder for expertise
+
+# Add expertise placeholders and their times to the dictionary
+for i, skill in enumerate(prioritized_skills):
+    # Get the corresponding expertise tuple from the original expertise list
+    skill_tuple = next((s for s in skills if s[0] == skill), None)
+
+    if skill_tuple:  # Only proceed if the expertise tuple was found
+        placeholders[f'{{{{skill{i}}}}}'] = skill_tuple[0]  # Expertise name
+        placeholders[f'{{{{sy{i}}}}}'] = skill_tuple[1]  # Time placeholder for expertise
 
 # Add soft skill placeholders to the dictionary
 for i, soft_skill in enumerate(soft_skills):
@@ -210,7 +218,23 @@ try:
 except Exception as e:
     print(f"Error saving document: {e}")
 
-# Now do it for the cover letter
+myQualities = input("...while using my [insert qualities]: ")
+mission = input("...to further your mission of [insert mission]: ")
+dontKnow = input("Job qualifications you don't have: ")
+
+pythonStory = "I'm actually using Python right now to generate this cover letter content (but don’t worry. It’s still written by me and not a bot!) " if "Python" in selected_skills else ""
+kotlinStory = "I originally began developing applications using Kotlin and Jetpack Compose, including an app to keep track of goals and routines." if "Kotlin" in selected_skills else ""
+flutterStory = ("I have a published Flutter web application, a personal wedding website, which I’ve used to display event details, provide links to external sites, and gather guest and RSVP information in Firebase. " + ("One of my more ambitious Flutter projects is an app which allows a user to write code using a click-and-select user interface, convert the objective code into MicroPython, and use that code to program a microcontroller via wifi. " if "Java" not in selected_skills else "")) if ("Flutter" in selected_skills or "Dart" in selected_skills) else ""
+reactStory = "I am currently working on finishing up a personal resume website using React, TypeScript, and Tailwind; all tools which I picked up about a year ago." if ("React" in selected_skills or "Tailwind" in selected_skills or "TypeScript" in selected_skills) else ""
+phpStory = "At my current job, I was tasked with writing code to have my company’s website communicate with the APIs of two different cell providers. At the beginning of the project, I had little to no knowledge of PHP, Laravel, or APIs; but now that feature is fully implemented. " if ("PHP" in selected_skills or "Laravel" in selected_skills or "API Integration" in selected_expertise) else ""
+javaStory = "For my senior project I developed an app in Java designed for novice programmers to use a click-and-select style UI to create and send code to a microcontroller board. I have since then rewritten the app from scratch with Flutter." if ("Java" in selected_skills) else ""
+
+coverLetter = """I am writing to express my interest in fulfilling your vacant role of """ + position + """.\nI’m a """ + title + """ with 8+ year of programming experience and 4+ years of web/mobile dev experience. I'm in search of a position that strongly aligns with my passion and drive for designing innovative tech, and I believe this position would provide an opportunity for me to engage in fulfilling work while using my """ + myQualities + """ to further """ + company + """’s mission of """ + mission + """.\n
+I dropped out of my first programming class in middle school, but years later, I was able to get back on the saddle via game development. I minored in Computer Science at Utah State where I learned fundamental programming languages such as C++, Java, and Python. """ + pythonStory + """During the last few years of my college experience, I took a special interest in web and mobile development. I cultivated an array of skills including HTML, JavaScript, CSS, Vue, Java, Kotlin, and Jetpack Compose.\n
+I continued to maintain and expand my skill set as a developer after graduation, undertaking person web and mobile app projects using Android Studio. """ + kotlinStory + """After independently learning Flutter / Dart, I began to develop mobile applications, using Google Firebase for database management . """ + flutterStory + """ It’s important for me to write practical, neat, reusable code as well as provide an intuitive and aesthetic user experience.\n
+In addition to my person experience, I also have professional experience building web applications using React, Bootstrap, Tailwind, and Vue. """ + reactStory + """I have professional experience with backend development using C, JavaScript, and TypeScript; database management using SQL, and API integration using PHP Laravel. """ + phpStory + """For all my projects, personal and professional, I have a strict history of managing my version control using Git.\n
+Your job listing mentions """ + dontKnow + """, of which I have limited professional experience with; however, I have no doubt that I’ll be able to learn and apply these skills in the same way I’ve done with many others.\n
+I would love to continue to discuss this position and how my expansive skill set would make me a great asset to your team. I would also be more than happy to demonstrate any software projects of mine to exemplify my ambition and competency. Please reach out to me for any questions concerning my candidacy. I look forward to hearing from you."""
 
 # Load the template
 template_path = 'cover_letter_template.docx'
@@ -220,23 +244,6 @@ try:
 except Exception as e:
     print(f"Error loading template: {e}")
     exit()
-
-myQualities = input("...while using my [insert qualities]: ")
-mission = input("...to further your mission of [insert mission]: ")
-dontKnow = input("Job qualifications you don't have: ")
-
-pythonStory = "I'm actually using Python right now to generate this cover letter content (but don’t worry. It’s still written by me and not a bot!) " if "Python" in selected_skills else ""
-kotlinStory = "I originally began developing applications using Kotlin and Jetpack Compose, including an app to keep track of goals and routines." if "Kotlin" in selected_skills else ""
-flutterStory = "I have a published Flutter web application, a personal wedding website, which I’ve used to display event details, provide links to external sites, and gather guest and RSVP information in Firebase. One of my more ambitious Flutter projects is an app which allows a user to write code using a click-and-select user interface, convert the objective code into MicroPython, and use that code to program a microcontroller via wifi. " if ("Flutter" in selected_skills or "Dart" in selected_skills) else ""
-reactStory = "I am currently working on finishing up a personal resume website using React, TypeScript, and Tailwind; all tools which I picked up about a year ago." if ("React" in selected_skills or "Tailwind" in selected_skills or "TypeScript" in selected_skills) else ""
-phpStory = "At my current job, I was tasked with writing code to have my company’s website communicate with the APIs of two different cell providers. At the beginning of the project, I had little to no knowledge of PHP, Laravel, or APIs; but now that feature is fully implemented. " if ("PHP" in selected_skills or "Laravel" in selected_skills or "API Integration" in selected_expertise) else ""
-
-coverLetter = """I am writing to express my interest in fulfilling your vacant role of """ + position + """.\nI’m in search of a position that strongly aligns with my passion and drive as a """ + title + """, and I believe this position would provide an opportunity for me to engage in fulfilling work while using my """ + myQualities + """ to further """ + company + """’s mission of """ + mission + """.\n
-I dropped out of my first programming class in middle school, but years later, I was able to get back on the saddle via game development. I minored in Computer Science at Utah State where I learned fundamental programming languages such as C++, Java, and Python. """ + pythonStory + """During the last few years of my college experience, I took a special interest in web and mobile development. I cultivated an array of skills including HTML, JavaScript, CSS, Vue, Java, Kotlin, and Jetpack Compose.
-I continued to maintain and expand my skill set as a developer after graduation, undertaking person web and mobile app projects using Android Studio. """ + kotlinStory + """After independently learning Flutter / Dart, I began to develop mobile applications, using Google Firebase for database management . """ + flutterStory + """ It’s important for me to write practical, neat, reusable code as well as provide an intuitive and aesthetic user experience.
-In addition to my person experience, I also have professional experience building web applications using React, Bootstrap, Tailwind, and Vue. """ + reactStory + """I have professional experience with backend development using C, JavaScript, and TypeScript; database management using SQL, and API integration using PHP Laravel. """ + phpStory + """For all my projects, personal and professional, I have a strict history of managing my version control using Git.
-Your job listing mentions """ + dontKnow + """, of which I have limited professional experience with; however, I have no doubt that I’ll be able to learn and apply these skills in the same way I’ve done with many others.
-I would love to continue to discuss this position and how my expansive skill set would make me a great asset to your team. I would also be more than happy to demonstrate any software projects of mine to exemplify my ambition and competency. Please reach out to me for any questions concerning my candidacy. I look forward to hearing from you."""
 
 # Dictionary of placeholders and values for the cover letter
 placeholders = {
